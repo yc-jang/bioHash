@@ -40,11 +40,11 @@ def get_unsupervised_weights(X, n_hidden, n_epochs, batch_size, prev_weights = N
         learning_rate=2e-2, precision=1e-30, anti_hebbian_learning_strength=0.4, lebesgue_norm=2.0, rank=2, skip=1):
     sample_sz = X.shape[1]    
     if prev_weights is not None:
-        #weights = prev_weights.cuda()
-        weights = prev_weights
+        weights = prev_weights.cuda()
+        #weights = prev_weights
     else:
-        #weights = torch.rand((n_hidden, sample_sz), dtype=torch.float).cuda()
-        weights = torch.rand((n_hidden, sample_sz), dtype=torch.float)
+        weights = torch.rand((n_hidden, sample_sz), dtype=torch.float).cuda()
+        #weights = torch.rand((n_hidden, sample_sz), dtype=torch.float)
 
     all_weights = torch.zeros((n_epochs*(X.shape[0]//batch_size)//skip + 1, n_hidden, sample_sz), dtype=torch.float)
     a_w_i = 0
@@ -53,16 +53,16 @@ def get_unsupervised_weights(X, n_hidden, n_epochs, batch_size, prev_weights = N
         eps = learning_rate * (1 - epoch / n_epochs)        
         shuffled_epoch_data = X[torch.randperm(X.shape[0]),:]
         for i in range(X.shape[0] // batch_size):
-            # mini_batch = shuffled_epoch_data[i*batch_size:(i+1)*batch_size,:].cuda()
-            mini_batch = shuffled_epoch_data[i*batch_size:(i+1)*batch_size,:]           
+            mini_batch = shuffled_epoch_data[i*batch_size:(i+1)*batch_size,:].cuda()
+            #mini_batch = shuffled_epoch_data[i*batch_size:(i+1)*batch_size,:]           
             mini_batch = torch.transpose(mini_batch, 0, 1)            
             sign = torch.sign(weights)            
             W = sign * torch.abs(weights) ** (lebesgue_norm - 1)        
             tot_input=torch.mm(W, mini_batch)  
             
             y = torch.argsort(tot_input, dim=0)
-            # yl = torch.zeros((n_hidden, batch_size), dtype = torch.float).cuda()            
-            yl = torch.zeros((n_hidden, batch_size), dtype = torch.float)
+            yl = torch.zeros((n_hidden, batch_size), dtype = torch.float).cuda()            
+            #yl = torch.zeros((n_hidden, batch_size), dtype = torch.float)
             yl[y[n_hidden-1,:], torch.arange(batch_size)] = 1.0
             yl[y[n_hidden-rank], torch.arange(batch_size)] =- anti_hebbian_learning_strength            
                     
@@ -249,6 +249,7 @@ bio_mnist_model_small.compile(optimizer="adam", loss="sparse_categorical_crossen
 history_bio_mnist_small = bio_mnist_model_small.fit(augmented_train_mnist_small_x, mnist_train_y, batch_size=256, epochs=20, validation_data=(augmented_test_mnist_small_x, mnist_test_y))
 
 compare_models(history_standard_mnist_small, history_bio_mnist_small)
+
 
 
 def get_unsupervised_weights_2(X, n_hidden, n_epochs, batch_size, prev_weights = None,
