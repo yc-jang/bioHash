@@ -16,11 +16,33 @@ from torch.optim import Adam
 
 import tensorflow as tf
 mnist  = tf.keras.datasets.mnist
+"""[mnist load data]
+    train_x : (60000, 28, 28)
+    train_y : (60000, )
+    test_x  : (10000, 28, 28)
+    test_y  : (10000, )
+
+Returns:
+    [torch.uint8]: [reshape data]
+    train_x : ([60000, 784])
+    test_x  : ([10000, 784])
+    train_y : ([60000])
+    test_y  : ([10000])
+
+"""
 (mnist_train_x, mnist_train_y), (mnist_test_x, mnist_test_y) = mnist.load_data() #load data
 mnist_train_x, mnist_test_x = torch.tensor(mnist_train_x.reshape(-1, 28*28, order="F")/255, dtype=torch.float), torch.tensor(mnist_test_x.reshape(-1, 28*28, order="F")/255, dtype=torch.float)
 mnist_train_y, mnist_test_y = torch.tensor(mnist_train_y), torch.tensor(mnist_test_y)
 
 cifar10  = tf.keras.datasets.cifar10
+"""[summary]
+    cifar10_train_x_raw : (50000, 32, 32, 3)
+    cifar10_train_y_raw : (50000, 1), min-max [0-9]
+    cifar10_test_x_raw  : (10000, 32, 32, 3)
+    cifar10_test_y_raw  : (10000, 1), min-max [0-9]
+Returns:
+    [type]: [description]
+"""
 (cifar10_train_x_raw, cifar10_train_y_raw), (cifar10_test_x_raw, cifar10_test_y_raw) = cifar10.load_data() #load data
 cifar10_train_x, cifar10_test_x = torch.tensor(cifar10_train_x_raw.reshape(-1, 32*32*3, order="F")/255, dtype=torch.float), torch.tensor(cifar10_test_x_raw.reshape(-1, 32*32*3, order="F")/255, dtype=torch.float)
 cifar10_train_y, cifar10_test_y = torch.tensor(cifar10_train_y_raw), torch.tensor(cifar10_test_y_raw)
