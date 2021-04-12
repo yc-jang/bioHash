@@ -9,7 +9,7 @@ from time import time
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.tensorboard import SummaryWriter
+#from torch.utils.tensorboard import SummaryWriter
 
 from torch.utils.data import TensorDataset, DataLoader
 from torch.optim import Adam
@@ -31,23 +31,40 @@ Returns:
 
 """
 (mnist_train_x, mnist_train_y), (mnist_test_x, mnist_test_y) = mnist.load_data() #load data
-mnist_train_x, mnist_test_x = torch.tensor(mnist_train_x.reshape(-1, 28*28, order="F")/255, dtype=torch.float), torch.tensor(mnist_test_x.reshape(-1, 28*28, order="F")/255, dtype=torch.float)
+mnist_train_x, mnist_test_x = torch.tensor(mnist_train_x.reshape(-1, 28*28, order="F")/255, dtype=torch.float32), torch.tensor(mnist_test_x.reshape(-1, 28*28, order="F")/255, dtype=torch.float32)
 mnist_train_y, mnist_test_y = torch.tensor(mnist_train_y), torch.tensor(mnist_test_y)
 
 cifar10  = tf.keras.datasets.cifar10
-"""[summary]
+"""[cifa10 load]
     cifar10_train_x_raw : (50000, 32, 32, 3)
     cifar10_train_y_raw : (50000, 1), min-max [0-9]
     cifar10_test_x_raw  : (10000, 32, 32, 3)
     cifar10_test_y_raw  : (10000, 1), min-max [0-9]
 Returns:
-    [type]: [description]
+    [torch.float32]: [reshape data]
+    cifar10_train_x : ([50000, 3072])
+    cifar10_test_x  : ([10000, 3072])
+
+    cifar10_train_y : ([50000, 1])
+    cifar10_test_y  : ([10000, 1])
 """
 (cifar10_train_x_raw, cifar10_train_y_raw), (cifar10_test_x_raw, cifar10_test_y_raw) = cifar10.load_data() #load data
 cifar10_train_x, cifar10_test_x = torch.tensor(cifar10_train_x_raw.reshape(-1, 32*32*3, order="F")/255, dtype=torch.float), torch.tensor(cifar10_test_x_raw.reshape(-1, 32*32*3, order="F")/255, dtype=torch.float)
 cifar10_train_y, cifar10_test_y = torch.tensor(cifar10_train_y_raw), torch.tensor(cifar10_test_y_raw)
 
 fashion_mnist  = tf.keras.datasets.fashion_mnist
+"""[fashion_mnist]
+    fashion_mnist_train_x : (60000, 28, 28)
+    fashion_mnist_train_y : (60000,)
+    fashion_mnist_test_x  : (10000, 28, 28)
+    fashion_mnist_test_y  : (10000,)
+Returns:
+    [torch.float32]: [reshape data]
+    fashion_mnist_train_x : ([60000, 784])
+    fashion_mnist_test_x  : ([10000, 784])
+    fashion_mnist_train_y : ([60000])
+    fashion_mnist_test_y  : ([10000])
+"""
 (fashion_mnist_train_x, fashion_mnist_train_y), (fashion_mnist_test_x, fashion_mnist_test_y) = fashion_mnist.load_data() #load data
 fashion_mnist_train_x, fashion_mnist_test_x = torch.tensor(fashion_mnist_train_x.reshape(-1, 28*28, order="F")/255, dtype=torch.float), torch.tensor(fashion_mnist_test_x.reshape(-1, 28*28, order="F")/255, dtype=torch.float)
 fashion_mnist_train_y, fashion_mnist_test_y = torch.tensor(fashion_mnist_train_y), torch.tensor(fashion_mnist_test_y)
